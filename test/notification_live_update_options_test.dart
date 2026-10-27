@@ -7,6 +7,7 @@ void main() {
     final options = NotificationLiveUpdateOptions(
       when: when,
       usesChronometer: true,
+      shortCriticalText: '12:34',
     );
 
     expect(options.toJson(), {
@@ -14,6 +15,7 @@ void main() {
       'when': 1234567890000,
       'usesChronometer': true,
       'chronometerCountDown': false,
+      'shortCriticalText': '12:34',
       'category': 'workout',
     });
   });
@@ -28,6 +30,7 @@ void main() {
         'when': null,
         'usesChronometer': false,
         'chronometerCountDown': false,
+        'shortCriticalText': null,
         'category': 'workout',
       });
     },

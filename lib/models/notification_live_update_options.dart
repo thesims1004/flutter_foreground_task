@@ -8,6 +8,7 @@ class NotificationLiveUpdateOptions {
     this.when,
     this.usesChronometer = false,
     this.chronometerCountDown = false,
+    this.shortCriticalText,
     this.category = 'workout',
   });
 
@@ -23,14 +24,18 @@ class NotificationLiveUpdateOptions {
   /// Whether the chronometer counts down instead of up.
   final bool chronometerCountDown;
 
+  /// Short text for Android's compact status chip (recommended: <= 7 chars).
+  final String? shortCriticalText;
+
   /// Android notification category. Workout tracking should use `workout`.
   final String category;
 
   Map<String, dynamic> toJson() => {
-    'enabled': enabled,
-    'when': when?.millisecondsSinceEpoch,
-    'usesChronometer': usesChronometer,
-    'chronometerCountDown': chronometerCountDown,
-    'category': category,
-  };
+        'enabled': enabled,
+        'when': when?.millisecondsSinceEpoch,
+        'usesChronometer': usesChronometer,
+        'chronometerCountDown': chronometerCountDown,
+        'shortCriticalText': shortCriticalText,
+        'category': category,
+      };
 }

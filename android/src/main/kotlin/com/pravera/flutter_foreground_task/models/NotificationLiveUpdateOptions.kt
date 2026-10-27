@@ -7,6 +7,7 @@ data class NotificationLiveUpdateOptions(
     val whenMillis: Long?,
     val usesChronometer: Boolean,
     val chronometerCountDown: Boolean,
+    val shortCriticalText: String?,
     val category: String
 ) {
     companion object {
@@ -18,6 +19,7 @@ data class NotificationLiveUpdateOptions(
                 whenMillis = (map[PrefsKey.LIVE_UPDATE_WHEN] as? Number)?.toLong(),
                 usesChronometer = map[PrefsKey.LIVE_UPDATE_USES_CHRONOMETER] as? Boolean ?: false,
                 chronometerCountDown = map[PrefsKey.LIVE_UPDATE_CHRONOMETER_COUNT_DOWN] as? Boolean ?: false,
+                shortCriticalText = map[PrefsKey.LIVE_UPDATE_SHORT_CRITICAL_TEXT] as? String,
                 category = map[PrefsKey.LIVE_UPDATE_CATEGORY] as? String ?: "workout"
             )
         }

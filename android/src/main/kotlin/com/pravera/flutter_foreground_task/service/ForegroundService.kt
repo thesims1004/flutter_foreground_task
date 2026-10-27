@@ -417,6 +417,9 @@ class ForegroundService : Service() {
             // Android accepts this documented extra on API 36 even when the
             // compile SDK does not yet expose setRequestPromotedOngoing().
             builder.extras.putBoolean("android.requestPromotedOngoing", true)
+            liveUpdate.shortCriticalText?.let {
+                builder.extras.putString("android.shortCriticalText", it)
+            }
             builder.setCategory(liveUpdate.category)
             builder.setShowWhen(liveUpdate.usesChronometer)
             liveUpdate.whenMillis?.let(builder::setWhen)

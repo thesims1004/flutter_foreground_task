@@ -46,6 +46,7 @@ data class NotificationContent(
                         prefs.getLong(PrefsKey.LIVE_UPDATE_WHEN, 0L) else null,
                     usesChronometer = prefs.getBoolean(PrefsKey.LIVE_UPDATE_USES_CHRONOMETER, false),
                     chronometerCountDown = prefs.getBoolean(PrefsKey.LIVE_UPDATE_CHRONOMETER_COUNT_DOWN, false),
+                    shortCriticalText = prefs.getString(PrefsKey.LIVE_UPDATE_SHORT_CRITICAL_TEXT, null),
                     category = prefs.getString(PrefsKey.LIVE_UPDATE_CATEGORY, null) ?: "workout"
                 )
             } else null
@@ -98,12 +99,14 @@ data class NotificationContent(
                     }
                     putBoolean(PrefsKey.LIVE_UPDATE_USES_CHRONOMETER, liveUpdate.usesChronometer)
                     putBoolean(PrefsKey.LIVE_UPDATE_CHRONOMETER_COUNT_DOWN, liveUpdate.chronometerCountDown)
+                    putString(PrefsKey.LIVE_UPDATE_SHORT_CRITICAL_TEXT, liveUpdate.shortCriticalText)
                     putString(PrefsKey.LIVE_UPDATE_CATEGORY, liveUpdate.category)
                 } else {
                     remove(PrefsKey.LIVE_UPDATE_ENABLED)
                     remove(PrefsKey.LIVE_UPDATE_WHEN)
                     remove(PrefsKey.LIVE_UPDATE_USES_CHRONOMETER)
                     remove(PrefsKey.LIVE_UPDATE_CHRONOMETER_COUNT_DOWN)
+                    remove(PrefsKey.LIVE_UPDATE_SHORT_CRITICAL_TEXT)
                     remove(PrefsKey.LIVE_UPDATE_CATEGORY)
                 }
                 commit()
@@ -149,6 +152,7 @@ data class NotificationContent(
                     }
                     putBoolean(PrefsKey.LIVE_UPDATE_USES_CHRONOMETER, liveUpdate.usesChronometer)
                     putBoolean(PrefsKey.LIVE_UPDATE_CHRONOMETER_COUNT_DOWN, liveUpdate.chronometerCountDown)
+                    putString(PrefsKey.LIVE_UPDATE_SHORT_CRITICAL_TEXT, liveUpdate.shortCriticalText)
                     putString(PrefsKey.LIVE_UPDATE_CATEGORY, liveUpdate.category)
                 }
                 commit()

@@ -46,6 +46,7 @@ object PreferencesKey {
     const val LIVE_UPDATE_WHEN = "when"
     const val LIVE_UPDATE_USES_CHRONOMETER = "usesChronometer"
     const val LIVE_UPDATE_CHRONOMETER_COUNT_DOWN = "chronometerCountDown"
+    const val LIVE_UPDATE_SHORT_CRITICAL_TEXT = "shortCriticalText"
     const val LIVE_UPDATE_CATEGORY = "category"
     const val NOTIFICATION_INITIAL_ROUTE = "initialRoute"
 
