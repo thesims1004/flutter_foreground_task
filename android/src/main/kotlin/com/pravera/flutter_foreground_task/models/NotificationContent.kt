@@ -47,7 +47,10 @@ data class NotificationContent(
                     usesChronometer = prefs.getBoolean(PrefsKey.LIVE_UPDATE_USES_CHRONOMETER, false),
                     chronometerCountDown = prefs.getBoolean(PrefsKey.LIVE_UPDATE_CHRONOMETER_COUNT_DOWN, false),
                     shortCriticalText = prefs.getString(PrefsKey.LIVE_UPDATE_SHORT_CRITICAL_TEXT, null),
-                    category = prefs.getString(PrefsKey.LIVE_UPDATE_CATEGORY, null) ?: "workout"
+                    category = prefs.getString(PrefsKey.LIVE_UPDATE_CATEGORY, null) ?: "workout",
+                    useProgressStyle = prefs.getBoolean(PrefsKey.LIVE_UPDATE_USE_PROGRESS_STYLE, false),
+                    progressIndeterminate = prefs.getBoolean(PrefsKey.LIVE_UPDATE_PROGRESS_INDETERMINATE, false),
+                    progress = prefs.getInt(PrefsKey.LIVE_UPDATE_PROGRESS, 0).coerceIn(0, 100)
                 )
             } else null
 
@@ -101,6 +104,9 @@ data class NotificationContent(
                     putBoolean(PrefsKey.LIVE_UPDATE_CHRONOMETER_COUNT_DOWN, liveUpdate.chronometerCountDown)
                     putString(PrefsKey.LIVE_UPDATE_SHORT_CRITICAL_TEXT, liveUpdate.shortCriticalText)
                     putString(PrefsKey.LIVE_UPDATE_CATEGORY, liveUpdate.category)
+                    putBoolean(PrefsKey.LIVE_UPDATE_USE_PROGRESS_STYLE, liveUpdate.useProgressStyle)
+                    putBoolean(PrefsKey.LIVE_UPDATE_PROGRESS_INDETERMINATE, liveUpdate.progressIndeterminate)
+                    putInt(PrefsKey.LIVE_UPDATE_PROGRESS, liveUpdate.progress)
                 } else {
                     remove(PrefsKey.LIVE_UPDATE_ENABLED)
                     remove(PrefsKey.LIVE_UPDATE_WHEN)
@@ -108,6 +114,9 @@ data class NotificationContent(
                     remove(PrefsKey.LIVE_UPDATE_CHRONOMETER_COUNT_DOWN)
                     remove(PrefsKey.LIVE_UPDATE_SHORT_CRITICAL_TEXT)
                     remove(PrefsKey.LIVE_UPDATE_CATEGORY)
+                    remove(PrefsKey.LIVE_UPDATE_USE_PROGRESS_STYLE)
+                    remove(PrefsKey.LIVE_UPDATE_PROGRESS_INDETERMINATE)
+                    remove(PrefsKey.LIVE_UPDATE_PROGRESS)
                 }
                 commit()
             }
@@ -154,6 +163,9 @@ data class NotificationContent(
                     putBoolean(PrefsKey.LIVE_UPDATE_CHRONOMETER_COUNT_DOWN, liveUpdate.chronometerCountDown)
                     putString(PrefsKey.LIVE_UPDATE_SHORT_CRITICAL_TEXT, liveUpdate.shortCriticalText)
                     putString(PrefsKey.LIVE_UPDATE_CATEGORY, liveUpdate.category)
+                    putBoolean(PrefsKey.LIVE_UPDATE_USE_PROGRESS_STYLE, liveUpdate.useProgressStyle)
+                    putBoolean(PrefsKey.LIVE_UPDATE_PROGRESS_INDETERMINATE, liveUpdate.progressIndeterminate)
+                    putInt(PrefsKey.LIVE_UPDATE_PROGRESS, liveUpdate.progress)
                 }
                 commit()
             }

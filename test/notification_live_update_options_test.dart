@@ -8,6 +8,8 @@ void main() {
       when: when,
       usesChronometer: true,
       shortCriticalText: '12:34',
+      useProgressStyle: true,
+      progressIndeterminate: true,
     );
 
     expect(options.toJson(), {
@@ -17,6 +19,9 @@ void main() {
       'chronometerCountDown': false,
       'shortCriticalText': '12:34',
       'category': 'workout',
+      'useProgressStyle': true,
+      'progressIndeterminate': true,
+      'progress': 0,
     });
   });
 
@@ -32,6 +37,9 @@ void main() {
         'chronometerCountDown': false,
         'shortCriticalText': null,
         'category': 'workout',
+        'useProgressStyle': false,
+        'progressIndeterminate': false,
+        'progress': 0,
       });
     },
   );

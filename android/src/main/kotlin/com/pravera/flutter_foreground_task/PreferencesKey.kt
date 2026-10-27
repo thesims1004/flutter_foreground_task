@@ -48,6 +48,9 @@ object PreferencesKey {
     const val LIVE_UPDATE_CHRONOMETER_COUNT_DOWN = "chronometerCountDown"
     const val LIVE_UPDATE_SHORT_CRITICAL_TEXT = "shortCriticalText"
     const val LIVE_UPDATE_CATEGORY = "category"
+    const val LIVE_UPDATE_USE_PROGRESS_STYLE = "useProgressStyle"
+    const val LIVE_UPDATE_PROGRESS_INDETERMINATE = "progressIndeterminate"
+    const val LIVE_UPDATE_PROGRESS = "progress"
     const val NOTIFICATION_INITIAL_ROUTE = "initialRoute"
 
     // task options

@@ -361,7 +361,7 @@ class ForegroundService : Service() {
             builder.setContentIntent(contentIntent)
             builder.setContentTitle(notificationContent.title)
             builder.setContentText(notificationContent.text)
-            builder.style = Notification.BigTextStyle()
+            applyNotificationStyle(builder)
             builder.setVisibility(notificationOptions.visibility)
             builder.setOnlyAlertOnce(notificationOptions.onlyAlertOnce)
             if (iconBackgroundColor != null) {
@@ -436,6 +436,39 @@ class ForegroundService : Service() {
         } else {
             builder.setShowWhen(notificationOptions.showWhen)
         }
+    }
+
+    /**
+     * Android 16's ProgressStyle is the progress-centric template used by
+     * Live Updates and OEM surfaces such as Samsung Now Bar. Reflection keeps
+     * this plugin buildable with compile SDK 35; unsupported devices retain
+     * the existing BigTextStyle notification.
+     */
+    private fun applyNotificationStyle(builder: Notification.Builder) {
+        val liveUpdate = notificationContent.liveUpdate
+        if (Build.VERSION.SDK_INT >= 36 &&
+            liveUpdate?.enabled == true &&
+            liveUpdate.useProgressStyle) {
+            val progressStyleApplied = runCatching {
+                val styleClass = Class.forName("android.app.Notification\$ProgressStyle")
+                val style = styleClass.getDeclaredConstructor().newInstance()
+                styleClass
+                    .getMethod(
+                        "setProgressIndeterminate",
+                        Boolean::class.javaPrimitiveType!!)
+                    .invoke(style, liveUpdate.progressIndeterminate)
+                if (!liveUpdate.progressIndeterminate) {
+                    styleClass
+                        .getMethod("setProgress", Int::class.javaPrimitiveType!!)
+                        .invoke(style, liveUpdate.progress)
+                }
+                builder.style = style as Notification.Style
+            }.isSuccess
+
+            if (progressStyleApplied) return
+        }
+
+        builder.style = Notification.BigTextStyle()
     }
 
     private fun updateNotification() {
