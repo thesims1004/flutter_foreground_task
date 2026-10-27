@@ -279,11 +279,13 @@ class ForegroundService : Service() {
 
         val serviceId = notificationOptions.serviceId
         val notification = createNotification()
+        logLiveUpdateEligibility(notification)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             startForeground(serviceId, notification, foregroundServiceTypes.value)
         } else {
             startForeground(serviceId, notification)
         }
+        logPostedLiveUpdateState(serviceId)
 
         releaseLockMode()
         acquireLockMode()
@@ -469,6 +471,49 @@ class ForegroundService : Service() {
         }
 
         builder.style = Notification.BigTextStyle()
+    }
+
+    private fun logLiveUpdateEligibility(notification: Notification) {
+        if (Build.VERSION.SDK_INT < 36 ||
+            notificationContent.liveUpdate?.enabled != true) return
+
+        val hasPromotableCharacteristics = runCatching {
+            notification.javaClass
+                .getMethod("hasPromotableCharacteristics")
+                .invoke(notification) as Boolean
+        }.getOrNull()
+        val canPostPromotedNotifications = runCatching {
+            val manager = getSystemService(NotificationManager::class.java)
+            manager.javaClass
+                .getMethod("canPostPromotedNotifications")
+                .invoke(manager) as Boolean
+        }.getOrNull()
+
+        Log.i(
+            TAG,
+            "LiveUpdateDiagnostics eligibility=" +
+                "$hasPromotableCharacteristics permission=" +
+                "$canPostPromotedNotifications")
+    }
+
+    private fun logPostedLiveUpdateState(serviceId: Int) {
+        if (Build.VERSION.SDK_INT < 36 ||
+            notificationContent.liveUpdate?.enabled != true) return
+
+        Handler(mainLooper).postDelayed({
+            val isPromoted = runCatching {
+                val manager = getSystemService(NotificationManager::class.java)
+                val posted = manager.activeNotifications
+                    .firstOrNull { it.id == serviceId }
+                    ?.notification ?: return@runCatching null
+                val promotedFlag = Notification::class.java
+                    .getField("FLAG_PROMOTED_ONGOING")
+                    .getInt(null)
+                posted.flags and promotedFlag != 0
+            }.getOrNull()
+
+            Log.i(TAG, "LiveUpdateDiagnostics postedPromoted=$isPromoted")
+        }, 500L)
     }
 
     private fun updateNotification() {
