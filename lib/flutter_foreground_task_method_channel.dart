@@ -12,6 +12,7 @@ import 'models/foreground_service_types.dart';
 import 'models/foreground_task_options.dart';
 import 'models/notification_button.dart';
 import 'models/notification_icon.dart';
+import 'models/notification_live_update_options.dart';
 import 'models/notification_options.dart';
 import 'models/notification_permission.dart';
 import 'models/service_options.dart';
@@ -20,12 +21,14 @@ import 'task_handler.dart';
 /// An implementation of [FlutterForegroundTaskPlatform] that uses method channels.
 class MethodChannelFlutterForegroundTask extends FlutterForegroundTaskPlatform {
   @visibleForTesting
-  final MethodChannel mMDChannel =
-      const MethodChannel('flutter_foreground_task/methods');
+  final MethodChannel mMDChannel = const MethodChannel(
+    'flutter_foreground_task/methods',
+  );
 
   @visibleForTesting
-  final MethodChannel mBGChannel =
-      const MethodChannel('flutter_foreground_task/background');
+  final MethodChannel mBGChannel = const MethodChannel(
+    'flutter_foreground_task/background',
+  );
 
   @visibleForTesting
   Platform platform = const LocalPlatform();
@@ -43,6 +46,7 @@ class MethodChannelFlutterForegroundTask extends FlutterForegroundTaskPlatform {
     required String notificationText,
     NotificationIcon? notificationIcon,
     List<NotificationButton>? notificationButtons,
+    NotificationLiveUpdateOptions? notificationLiveUpdateOptions,
     String? notificationInitialRoute,
     Function? callback,
   }) async {
@@ -56,6 +60,7 @@ class MethodChannelFlutterForegroundTask extends FlutterForegroundTaskPlatform {
       notificationContentText: notificationText,
       notificationIcon: notificationIcon,
       notificationButtons: notificationButtons,
+      notificationLiveUpdateOptions: notificationLiveUpdateOptions,
       notificationInitialRoute: notificationInitialRoute,
       callback: callback,
     ).toJson(platform);
@@ -75,6 +80,7 @@ class MethodChannelFlutterForegroundTask extends FlutterForegroundTaskPlatform {
     String? notificationText,
     NotificationIcon? notificationIcon,
     List<NotificationButton>? notificationButtons,
+    NotificationLiveUpdateOptions? notificationLiveUpdateOptions,
     String? notificationInitialRoute,
     Function? callback,
   }) async {
@@ -84,6 +90,7 @@ class MethodChannelFlutterForegroundTask extends FlutterForegroundTaskPlatform {
       notificationContentText: notificationText,
       notificationIcon: notificationIcon,
       notificationButtons: notificationButtons,
+      notificationLiveUpdateOptions: notificationLiveUpdateOptions,
       notificationInitialRoute: notificationInitialRoute,
       callback: callback,
     ).toJson(platform);
@@ -214,8 +221,9 @@ class MethodChannelFlutterForegroundTask extends FlutterForegroundTaskPlatform {
   @override
   Future<bool> openIgnoreBatteryOptimizationSettings() async {
     if (platform.isAndroid) {
-      return await mMDChannel
-          .invokeMethod('openIgnoreBatteryOptimizationSettings');
+      return await mMDChannel.invokeMethod(
+        'openIgnoreBatteryOptimizationSettings',
+      );
     }
     return true;
   }
@@ -246,15 +254,17 @@ class MethodChannelFlutterForegroundTask extends FlutterForegroundTaskPlatform {
 
   @override
   Future<NotificationPermission> checkNotificationPermission() async {
-    final int result =
-        await mMDChannel.invokeMethod('checkNotificationPermission');
+    final int result = await mMDChannel.invokeMethod(
+      'checkNotificationPermission',
+    );
     return NotificationPermission.fromIndex(result);
   }
 
   @override
   Future<NotificationPermission> requestNotificationPermission() async {
-    final int result =
-        await mMDChannel.invokeMethod('requestNotificationPermission');
+    final int result = await mMDChannel.invokeMethod(
+      'requestNotificationPermission',
+    );
     return NotificationPermission.fromIndex(result);
   }
 

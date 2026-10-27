@@ -21,15 +21,16 @@ void main() {
     FlutterForegroundTaskPlatform.instance = platformChannel;
     FlutterForegroundTask.resetStatic();
 
-    methodCallHandler =
-        ServiceApiMethodCallHandler(() => platformChannel.platform);
+    methodCallHandler = ServiceApiMethodCallHandler(
+      () => platformChannel.platform,
+    );
 
     // method channel
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
-      platformChannel.mMDChannel,
-      methodCallHandler.onMethodCall,
-    );
+          platformChannel.mMDChannel,
+          methodCallHandler.onMethodCall,
+        );
   });
 
   tearDown(() {
@@ -517,6 +518,7 @@ Future<ServiceRequestResult> _startService(ServiceDummyData dummyData) {
     notificationText: dummyData.notificationText,
     notificationIcon: dummyData.notificationIcon,
     notificationButtons: dummyData.notificationButtons,
+    notificationLiveUpdateOptions: dummyData.notificationLiveUpdateOptions,
     callback: testCallback,
   );
 }
@@ -532,6 +534,7 @@ Future<ServiceRequestResult> _updateService(ServiceDummyData dummyData) {
     notificationText: dummyData.notificationText,
     notificationIcon: dummyData.notificationIcon,
     notificationButtons: dummyData.notificationButtons,
+    notificationLiveUpdateOptions: dummyData.notificationLiveUpdateOptions,
     callback: testCallback,
   );
 }
@@ -592,7 +595,8 @@ class ServiceApiMethodCallHandler {
     final Platform platform = _platformGetter();
     if (!ServiceApiMethod.getImplementation(platform).contains(method)) {
       throw UnimplementedError(
-          'Unimplemented method on ${platform.operatingSystem}: $method');
+        'Unimplemented method on ${platform.operatingSystem}: $method',
+      );
     }
   }
 

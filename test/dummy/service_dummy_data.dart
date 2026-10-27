@@ -11,23 +11,20 @@ void testCallback() {
 class ServiceDummyData {
   final AndroidNotificationOptions androidNotificationOptions =
       AndroidNotificationOptions(
-    channelId: 'test_channel',
-    channelName: 'Test Channel',
-    channelDescription: 'Test Channel Description',
-    channelImportance: NotificationChannelImportance.LOW,
-    priority: NotificationPriority.LOW,
-    enableVibration: false,
-    playSound: false,
-    showWhen: false,
-    showBadge: false,
-    visibility: NotificationVisibility.VISIBILITY_PUBLIC,
-  );
+        channelId: 'test_channel',
+        channelName: 'Test Channel',
+        channelDescription: 'Test Channel Description',
+        channelImportance: NotificationChannelImportance.LOW,
+        priority: NotificationPriority.LOW,
+        enableVibration: false,
+        playSound: false,
+        showWhen: false,
+        showBadge: false,
+        visibility: NotificationVisibility.VISIBILITY_PUBLIC,
+      );
 
   final IOSNotificationOptions iosNotificationOptions =
-      const IOSNotificationOptions(
-    showNotification: false,
-    playSound: false,
-  );
+      const IOSNotificationOptions(showNotification: false, playSound: false);
 
   final ForegroundTaskOptions foregroundTaskOptions = ForegroundTaskOptions(
     eventAction: ForegroundTaskEventAction.repeat(1000),
@@ -50,10 +47,22 @@ class ServiceDummyData {
 
   final List<NotificationButton> notificationButtons = [
     const NotificationButton(
-        id: 'id_test1', text: 'test1', textColor: Colors.purple),
+      id: 'id_test1',
+      text: 'test1',
+      textColor: Colors.purple,
+    ),
     const NotificationButton(
-        id: 'id_test2', text: 'test2', textColor: Colors.green),
+      id: 'id_test2',
+      text: 'test2',
+      textColor: Colors.green,
+    ),
   ];
+
+  final NotificationLiveUpdateOptions notificationLiveUpdateOptions =
+      NotificationLiveUpdateOptions(
+        when: DateTime.fromMillisecondsSinceEpoch(1234567890000),
+        usesChronometer: true,
+      );
 
   Map<String, dynamic> getStartServiceArgs(Platform platform) {
     return ServiceStartOptions(
@@ -65,6 +74,7 @@ class ServiceDummyData {
       notificationContentText: notificationText,
       notificationIcon: notificationIcon,
       notificationButtons: notificationButtons,
+      notificationLiveUpdateOptions: notificationLiveUpdateOptions,
       callback: testCallback,
     ).toJson(platform);
   }
@@ -76,6 +86,7 @@ class ServiceDummyData {
       notificationContentText: notificationText,
       notificationIcon: notificationIcon,
       notificationButtons: notificationButtons,
+      notificationLiveUpdateOptions: notificationLiveUpdateOptions,
       callback: testCallback,
     ).toJson(platform);
   }

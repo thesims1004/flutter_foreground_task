@@ -41,6 +41,12 @@ object PreferencesKey {
     const val NOTIFICATION_CONTENT_TEXT = "notificationContentText"
     const val NOTIFICATION_CONTENT_ICON = "icon"
     const val NOTIFICATION_CONTENT_BUTTONS = "buttons"
+    const val NOTIFICATION_LIVE_UPDATE = "liveUpdate"
+    const val LIVE_UPDATE_ENABLED = "enabled"
+    const val LIVE_UPDATE_WHEN = "when"
+    const val LIVE_UPDATE_USES_CHRONOMETER = "usesChronometer"
+    const val LIVE_UPDATE_CHRONOMETER_COUNT_DOWN = "chronometerCountDown"
+    const val LIVE_UPDATE_CATEGORY = "category"
     const val NOTIFICATION_INITIAL_ROUTE = "initialRoute"
 
     // task options

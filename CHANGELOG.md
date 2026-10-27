@@ -1,3 +1,8 @@
+## 9.2.2+runup.1
+
+* [FEAT-Android] Add optional Android 16 promoted ongoing notification
+  (Live Update) support with a system chronometer and pre-Android-16 fallback.
+
 ## 9.2.2
 
 * [**FIX**] Resolved frequent ForegroundServiceDidNotStartInTime and ForegroundServiceDidNotStopInTime exceptions by avoiding redundant foreground service start contracts. [#377](https://github.com/Dev-hwang/flutter_foreground_task/pull/377)

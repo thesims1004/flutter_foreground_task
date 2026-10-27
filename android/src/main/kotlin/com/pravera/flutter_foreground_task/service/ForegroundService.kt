@@ -356,7 +356,7 @@ class ForegroundService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val builder = Notification.Builder(this, notificationOptions.channelId)
             builder.setOngoing(true)
-            builder.setShowWhen(notificationOptions.showWhen)
+            applyLiveUpdate(builder)
             builder.setSmallIcon(iconResId)
             builder.setContentIntent(contentIntent)
             builder.setContentTitle(notificationContent.title)
@@ -408,6 +408,22 @@ class ForegroundService : Service() {
             }
 
             return builder.build()
+        }
+    }
+
+    private fun applyLiveUpdate(builder: Notification.Builder) {
+        val liveUpdate = notificationContent.liveUpdate
+        if (Build.VERSION.SDK_INT >= 36 && liveUpdate?.enabled == true) {
+            // Android accepts this documented extra on API 36 even when the
+            // compile SDK does not yet expose setRequestPromotedOngoing().
+            builder.extras.putBoolean("android.requestPromotedOngoing", true)
+            builder.setCategory(liveUpdate.category)
+            builder.setShowWhen(liveUpdate.usesChronometer)
+            liveUpdate.whenMillis?.let(builder::setWhen)
+            builder.setUsesChronometer(liveUpdate.usesChronometer)
+            builder.setChronometerCountDown(liveUpdate.chronometerCountDown)
+        } else {
+            builder.setShowWhen(notificationOptions.showWhen)
         }
     }
 

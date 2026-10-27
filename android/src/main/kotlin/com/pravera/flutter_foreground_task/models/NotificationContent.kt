@@ -10,6 +10,7 @@ data class NotificationContent(
         val text: String,
         val icon: NotificationIcon?,
         val buttons: List<NotificationButton>,
+        val liveUpdate: NotificationLiveUpdateOptions?,
         val initialRoute: String?
 ) {
     companion object {
@@ -38,11 +39,23 @@ data class NotificationContent(
 
             val initialRoute = prefs.getString(PrefsKey.NOTIFICATION_INITIAL_ROUTE, null)
 
+            val liveUpdate = if (prefs.contains(PrefsKey.LIVE_UPDATE_ENABLED)) {
+                NotificationLiveUpdateOptions(
+                    enabled = prefs.getBoolean(PrefsKey.LIVE_UPDATE_ENABLED, true),
+                    whenMillis = if (prefs.contains(PrefsKey.LIVE_UPDATE_WHEN))
+                        prefs.getLong(PrefsKey.LIVE_UPDATE_WHEN, 0L) else null,
+                    usesChronometer = prefs.getBoolean(PrefsKey.LIVE_UPDATE_USES_CHRONOMETER, false),
+                    chronometerCountDown = prefs.getBoolean(PrefsKey.LIVE_UPDATE_CHRONOMETER_COUNT_DOWN, false),
+                    category = prefs.getString(PrefsKey.LIVE_UPDATE_CATEGORY, null) ?: "workout"
+                )
+            } else null
+
             return NotificationContent(
                 title = title,
                 text = text,
                 icon = icon,
                 buttons = buttons,
+                liveUpdate = liveUpdate,
                 initialRoute = initialRoute
             )
         }
@@ -67,6 +80,8 @@ data class NotificationContent(
             }
 
             val initialRoute = map?.get(PrefsKey.NOTIFICATION_INITIAL_ROUTE) as? String
+            val liveUpdate = NotificationLiveUpdateOptions.fromMap(
+                map?.get(PrefsKey.NOTIFICATION_LIVE_UPDATE) as? Map<*, *>)
 
             with(prefs.edit()) {
                 putString(PrefsKey.NOTIFICATION_CONTENT_TITLE, title)
@@ -74,6 +89,23 @@ data class NotificationContent(
                 putString(PrefsKey.NOTIFICATION_CONTENT_ICON, iconJsonString)
                 putString(PrefsKey.NOTIFICATION_CONTENT_BUTTONS, buttonsJsonString)
                 putString(PrefsKey.NOTIFICATION_INITIAL_ROUTE, initialRoute)
+                if (liveUpdate != null) {
+                    putBoolean(PrefsKey.LIVE_UPDATE_ENABLED, liveUpdate.enabled)
+                    if (liveUpdate.whenMillis != null) {
+                        putLong(PrefsKey.LIVE_UPDATE_WHEN, liveUpdate.whenMillis)
+                    } else {
+                        remove(PrefsKey.LIVE_UPDATE_WHEN)
+                    }
+                    putBoolean(PrefsKey.LIVE_UPDATE_USES_CHRONOMETER, liveUpdate.usesChronometer)
+                    putBoolean(PrefsKey.LIVE_UPDATE_CHRONOMETER_COUNT_DOWN, liveUpdate.chronometerCountDown)
+                    putString(PrefsKey.LIVE_UPDATE_CATEGORY, liveUpdate.category)
+                } else {
+                    remove(PrefsKey.LIVE_UPDATE_ENABLED)
+                    remove(PrefsKey.LIVE_UPDATE_WHEN)
+                    remove(PrefsKey.LIVE_UPDATE_USES_CHRONOMETER)
+                    remove(PrefsKey.LIVE_UPDATE_CHRONOMETER_COUNT_DOWN)
+                    remove(PrefsKey.LIVE_UPDATE_CATEGORY)
+                }
                 commit()
             }
         }
@@ -98,6 +130,9 @@ data class NotificationContent(
             }
 
             val initialRoute = map?.get(PrefsKey.NOTIFICATION_INITIAL_ROUTE) as? String
+            val hasLiveUpdate = map?.containsKey(PrefsKey.NOTIFICATION_LIVE_UPDATE) == true
+            val liveUpdate = NotificationLiveUpdateOptions.fromMap(
+                map?.get(PrefsKey.NOTIFICATION_LIVE_UPDATE) as? Map<*, *>)
 
             with(prefs.edit()) {
                 title?.let { putString(PrefsKey.NOTIFICATION_CONTENT_TITLE, it) }
@@ -105,6 +140,17 @@ data class NotificationContent(
                 iconJsonString?.let { putString(PrefsKey.NOTIFICATION_CONTENT_ICON, it) }
                 buttonsJsonString?.let { putString(PrefsKey.NOTIFICATION_CONTENT_BUTTONS, it) }
                 initialRoute?.let { putString(PrefsKey.NOTIFICATION_INITIAL_ROUTE, it) }
+                if (hasLiveUpdate && liveUpdate != null) {
+                    putBoolean(PrefsKey.LIVE_UPDATE_ENABLED, liveUpdate.enabled)
+                    if (liveUpdate.whenMillis != null) {
+                        putLong(PrefsKey.LIVE_UPDATE_WHEN, liveUpdate.whenMillis)
+                    } else {
+                        remove(PrefsKey.LIVE_UPDATE_WHEN)
+                    }
+                    putBoolean(PrefsKey.LIVE_UPDATE_USES_CHRONOMETER, liveUpdate.usesChronometer)
+                    putBoolean(PrefsKey.LIVE_UPDATE_CHRONOMETER_COUNT_DOWN, liveUpdate.chronometerCountDown)
+                    putString(PrefsKey.LIVE_UPDATE_CATEGORY, liveUpdate.category)
+                }
                 commit()
             }
         }
