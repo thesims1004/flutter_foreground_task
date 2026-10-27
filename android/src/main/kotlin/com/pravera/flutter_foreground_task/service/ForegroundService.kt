@@ -417,8 +417,16 @@ class ForegroundService : Service() {
             // Android accepts this documented extra on API 36 even when the
             // compile SDK does not yet expose setRequestPromotedOngoing().
             builder.extras.putBoolean("android.requestPromotedOngoing", true)
-            liveUpdate.shortCriticalText?.let {
-                builder.extras.putString("android.shortCriticalText", it)
+            liveUpdate.shortCriticalText?.let { shortText ->
+                // Keep the plugin buildable for host apps that still compile
+                // with SDK 35, while using the official API on Android 16.
+                runCatching {
+                    builder.javaClass
+                        .getMethod("setShortCriticalText", String::class.java)
+                        .invoke(builder, shortText)
+                }.onFailure {
+                    builder.extras.putString("android.shortCriticalText", shortText)
+                }
             }
             builder.setCategory(liveUpdate.category)
             builder.setShowWhen(liveUpdate.usesChronometer)
